@@ -1,0 +1,40 @@
+<form class="mx-auto w-25 bg-blur rounded"  [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+        <div class="label-holder text-white textCol d-flex justify-content-center">
+            <label for="name" class="h4 mb-2">Name</label>
+        </div>
+        <input formControlName="name" type="text" class="form-control" id="name" name="name" [(ngModel)]="recipe.name">
+        <!-- <small th:if="${#fields.hasErrors('name')}" th:errorclass="error"
+                   th:errors="*{name}" class="text-danger">Name error message</small> -->
+    </div>
+
+    <div class="form-group">
+        <div class="label-holder text-white textCol d-flex justify-content-center">
+            <label for="ingredients" class="h4 mb-2">Ingredients</label>
+        </div>
+        <input formControlName="ingredients" type="text" class="form-control" id="ingredients" [(ngModel)]="recipe.ingredients" name="ingredients">
+        <!-- <small th:if="${#fields.hasErrors('ingredients')}" th:errorclass="error"
+                   th:errors="*{ingredients}" class="text-danger">Ingredients error message</small> -->
+    </div>
+
+    <div class="form-group">
+
+        <div class="label-holder text-white textCol d-flex justify-content-center">
+            <label for="category" class="h4 mb-2">Category</label>
+        </div>
+        <select class="browser-default custom-select" id="category" name="category" formControlName="category" [(ngModel)]="recipe.category">
+            <option value="">Select category</option>
+            <option value="MAIN_DISH">MAIN_DISH</option>
+            <option value="DESSERT">DESSERT</option>
+            <option value="COCKTAIL">COCKTAIL</option>
+            <!-- <small class="text-danger" th:if="${#fields.hasErrors('category')}" th:errorclass="error"
+                   th:errors="*{category}">>Password error message</small> -->
+        </select>
+    </div>
+
+    <div class="button-holder d-flex justify-content-center">
+        <button type="submit" class="btn btn-warning  mb-3" value="Register">Add recipe</button>
+    </div>
+
+</form>

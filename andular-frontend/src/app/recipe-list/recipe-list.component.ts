@@ -1,0 +1,60 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Recipe } from '../recipe';
+import { RecipeService } from '../recipe.service';
+import { routes } from '../app.routes';
+import { Router } from '@angular/router';
+
+
+@Component({
+  selector: 'app-recipe-list',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './recipe-list.component.html',
+  styleUrl: './recipe-list.component.css'
+})
+export class RecipeListComponent implements OnInit {
+
+  allRecipes: Recipe[];
+  desserts: Recipe[];
+  constructor(private recipeService: RecipeService, private router: Router) {
+    this.allRecipes = new Array;
+    this.desserts = new Array;
+  }
+
+
+
+  deleteRecipe(id: number) {
+    debugger;
+    this.recipeService.deleteById(id).subscribe({
+      next: () => {
+        console.log('Recipe deleted successfully');
+        window.location.reload();
+      },
+      error: (error) => {
+        console.error('Error deleting recipe:', error);
+        window.location.reload();
+      },
+    });
+  }
+
+  editRecipe(id: number){
+    this.router.navigate(["update-recipe",id]);
+  }
+  
+
+  ngOnInit(): void {
+    this.recipeService.getAllRecipes().subscribe(data => {
+      debugger
+      this.allRecipes = data;
+    });
+    this.recipeService.getDesserts().subscribe(data => {
+      this.desserts = data;
+    });
+  }
+
+
+
+
+
+}

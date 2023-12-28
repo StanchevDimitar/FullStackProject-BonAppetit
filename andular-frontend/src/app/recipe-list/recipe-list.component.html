@@ -1,0 +1,50 @@
+<h2>List of all recipes</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name:</th>
+            <th>Ingredients:</th>
+            <th>Category:</th>
+            <th>Created By:</th>
+            <th>Actions:</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let recipe of allRecipes">
+            <td> {{recipe.name}}</td>
+            <td> {{recipe.ingredients}}</td>
+            <td> {{recipe.category}}</td>
+            <td> {{recipe.addedBy}}</td>
+            <td>
+                <button (click)="editRecipe(recipe.id)">Edit</button>
+                <button (click)="deleteRecipe(recipe.id)">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<h2>List of desserts recipes</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name:</th>
+            <th>Ingredients:</th>
+            <th>Category:</th>
+            <th>Created By:</th>
+            <th>Actions:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let dessert of desserts">
+            <td> {{dessert.name}}</td>
+            <td> {{dessert.ingredients}}</td>
+            <td> {{dessert.category}}</td>
+            <td> {{dessert.addedBy}}</td>
+
+            <td>
+                <button (click)="editRecipe(dessert.id)">Edit</button>
+                <button (click)="deleteRecipe(dessert.id)">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

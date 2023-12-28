@@ -1,0 +1,64 @@
+<form class="mx-auto w-25 bg-blur rounded" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+  <div class="form-group">
+    <div class="label-holder textCol d-flex justify-content-center">
+      <label for="username" class="h4 mb-2 text-white">Username</label>
+    </div>
+
+
+    <input formControlName="username" type="text" class="form-control" id="username" name="username"/>
+    <div *ngIf="registerForm.get('username')?.hasError('required') && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)">
+      Username is required.
+    </div>
+    <div *ngIf="registerForm.get('username')?.hasError('minlength')">
+      Username must be at least 3 characters long.
+    </div>
+    <div *ngIf="registerForm.get('username')?.hasError('maxlength')">
+      Username cannot exceed 20 characters.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="email" class="h4 mb-2">Email</label>
+    </div>
+    <input formControlName="email"  type="email" class="form-control" id="email" name="email"/>
+    <div *ngIf="registerForm.get('email')?.hasError('required') && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)">
+      Email is required.
+    </div>
+    <div *ngIf="registerForm.get('email')?.hasError('email') && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)">
+      Please enter a valid email address.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="password" class="h4 mb-2">Password</label>
+    </div>
+    <input formControlName="password" type="password" class="form-control" id="password" name="password"/>
+    <div *ngIf="registerForm.get('password')?.hasError('required') && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
+      Password is required.
+    </div>
+    <div *ngIf="registerForm.get('password')?.hasError('minlength')">
+      Password must be at least 3 characters long.
+    </div>
+    <div *ngIf="registerForm.get('password')?.hasError('maxlength')">
+      Password cannot exceed 20 characters.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="label-holder text-white textCol d-flex justify-content-center">
+      <label for="confirmPassword" class="h4 mb-2">Confirm Password</label>
+    </div>
+    <input formControlName="confirmPassword" type="password" class="form-control" id="confirmPassword" name="confirmPassword"/>
+    <div *ngIf="registerForm.hasError('passwordMismatch') && (registerForm.get('confirmPassword')?.dirty || registerForm.get('confirmPassword')?.touched)">
+      Passwords do not match.
+    </div>
+  </div>
+
+  <div class="button-holder d-flex justify-content-center">
+    <button type="submit" [disabled]="!registerForm.valid" class="btn btn-warning  mb-3" value="Register">Register</button>
+  </div>
+
+</form>
