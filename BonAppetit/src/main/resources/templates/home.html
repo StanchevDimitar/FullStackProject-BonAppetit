@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/commons::head"></head>
+<body>
+<header th:replace="fragments/commons::nav"></header>
+<main>
+    <div class="container bg-blur rounded mt-1 mb-4">
+        <div class="row mt-1 mb-2">
+            <div class="col-6 mt-1 mb-1">
+
+                <div id="1red">
+                    <h3 class="mySticky bg-gray text-dark  mb-0 mt-2" th:text="'Desserts '+ ${desserts.size()}">Desserts ({count})</h3>
+                    <div class="bg-dark rounded m-auto" style="height: 31vh; overflow: auto">
+                        <table class="table table-striped table-dark">
+                            <tr th:each="dess: ${desserts}">
+                                <td class="bg-warning" scope="row" style="width: 5%">
+                                    <img class="mr-2 " src="/img/dessert.png" alt="Dessert" width="35px"
+                                         height="35px">
+                                </td>
+                                <td th:text="${dess.name}">{name}</td>
+                                <td th:text="${dess.ingredients}">{ingredients}</td>
+                                <td><a th:href="@{/recipes/addToFav/{Name}(Name=${dess.name})}"><img class="mr-2 " src="/img/add-to-favourites.png" alt="Dessert" width="35px" height="35px"></a></td>                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="2red">
+                    <h3 class="mySticky bg-gray text-dark  mb-0 mt-2" th:text="'Cocktails '+ ${cocktails.size()}" >Cocktails ({count})</h3>
+                    <div class="bg-dark rounded m-auto" style="height: 31vh; overflow: auto">
+                        <table class="table table-striped table-dark">
+                            <tr th:each="co: ${cocktails}">
+                                <td class="bg-success" scope="row" style="width: 5%">
+                                    <img class="mr-2 " src="/img/cocktail.png" alt="Cocktail" width="35px"
+                                         height="35px">
+                                </td>
+                                <td th:text="${co.name}">{name}</td>
+                                <td th:text="${co.ingredients}">{ingredients}</td>
+                                <td><a th:href="@{/recipes/addToFav/{Name}(Name=${co.name})}"><img class="mr-2 " src="/img/add-to-favourites.png" alt="Cocktail" width="35px" height="35px"></a></td>                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 mt-1 mb-1">
+                <h3 class="mySticky bg-gray text-dark  mb-0 mt-2" th:text="'Main Dishes '+ ${mainDishes.size()}">Main Dishes ({count})</h3>
+                <div class="bg-dark rounded m-auto" style="height: 67vh; overflow: auto">
+                    <table class="table table-striped table-dark">
+                        <tr th:each="md: ${mainDishes}">
+                            <td class="bg-info" scope="row" style="width: 5%">
+                                <img class="mr-2 " src="/img/main-dish.png" alt="Main-Dish" width="35px"
+                                     height="35px">
+                            </td>
+                            <td th:text="${md.name}">{name}</td>
+                            <td th:text="${md.ingredients}">{ingredients}</td>
+                            <td><a th:href="@{/recipes/addToFav/{Name}(Name=${md.name})}"><img class="mr-2 " src="/img/add-to-favourites.png" alt="Main-Dish" width="35px" height="35px"></a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/commons::footer"></footer>
+</body>
+</html>

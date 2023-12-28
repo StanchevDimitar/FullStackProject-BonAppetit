@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/commons::head"></head>
+<body>
+<header th:replace="fragments/commons::nav"></header>
+<main>
+    <div class="container bg-blur rounded mt-1 mb-4">
+        <h3 class="mySticky bg-gray text-dark  mb-0 mt-2" th:text="'Favourites ' + (${favouriteRecipes.size()})">Favourites ({count})</h3>
+        <h6 class="mySticky bg-gray text-dark  mb-0 mt-0" th:text="'Username: ' + ${currentUser.username}">Username: {username}</h6>
+        <div class="bg-dark rounded m-auto" style="height: 67vh; overflow: auto">
+            <table class="table table-striped table-dark">
+                <tr th:each="r: ${favouriteRecipes}">
+                    <td class="bg-primary" scope="row" style="width: 5%">
+                        <img class="mr-2 " src="/img/star.png" alt="Star" width="35px"
+                             height="35px">
+                    </td>
+                    <td th:text="*{r.name}">{name}</td>
+                    <td th:text="*{r.ingredients}">{ingredients}</td>
+                    <td th:text="'Added by: ' + *{r.addedBy.username}">Added by: {username}</td>
+                    <td style="width: 15%"><a class="btn-danger btn" th:href="@{/recipes/removeFromFav/{Name}(Name=${r.name})}">Remove</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/commons::footer"></footer>
+</body>
+</html>
