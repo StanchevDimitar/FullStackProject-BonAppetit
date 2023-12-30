@@ -1,59 +1,91 @@
-
-import { DebugNode, Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
-import { Recipe } from './recipe';
+import {Injectable} from '@angular/core';
+import {catchError, Observable, of, tap} from 'rxjs';
+import {Recipe} from './recipe';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {AuthService} from "./auth/services/auth.service";
 
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class RecipeService {
 
 
-  private Url = "http://localhost:8090/api/recipes";
+    private Url = "http://localhost:8090/api/recipes";
 
-  constructor(private http: HttpClient) { }
 
-  private getHeaders(): HttpHeaders {
-    // Retrieve the token from localStorage
-    const token = localStorage.getItem('token') || null;
+    constructor(private http: HttpClient, private authService: AuthService) {
+    }
 
-      return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    private getHeaders(): HttpHeaders {
+        // Retrieve the token from localStorage
+        const token = localStorage.getItem('token') || null;
 
-    // Set the Authorization header with the token
+        return new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-  }
-  getAllRecipes(): Observable<Recipe[]>{
-    const headers = this.getHeaders();
-    debugger;
-    return this.http.get<Recipe[]>(`${this.Url}/allRecipes`,{headers});
-  }
-  getDesserts(): Observable<Recipe[]>{
-    return this.http.get<Recipe[]>(`${this.Url}/dessert`);
-  }
+        // Set the Authorization header with the token
 
-  deleteById(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.Url}/delete/${id}`);
-  }
-  getRecipeById(id: number): Observable<Recipe> {
-    return this.http.get<Recipe>(`${this.Url}/getRecipe/${id}`);
-  }
-  createRecipe(recipe: Recipe): Observable<Recipe> {
-    return this.http.post<Recipe>(`${this.Url}/addRecipe`, recipe)
-      .pipe(
-        tap((result) => {
-          console.log('Result:', result);
-        }),
-        catchError((error) => {
-          console.error('Error:', error);
-          throw error;
-        })
-      );
-  }
-  updateRecipeById(id: Number,recipe: Recipe): Observable<Object>{
-    debugger;
-    return this.http.put<Object>(`${this.Url}/updateRecipe/${id}`,recipe);
-  }
+    }
 
+    getAllRecipes(): Observable<Recipe[]> {
+        return this.http.get<Recipe[]>(`${this.Url}/allRecipes`,);
+    }
+
+    getDesserts(): Observable<Recipe[]> {
+
+        return this.http.get<Recipe[]>(`${this.Url}/dessert`);
+    }
+
+    deleteById(id: number): Observable<void> {
+        const headers = this.getHeaders();
+        return this.http.delete<void>(`${this.Url}/delete/${id}`, {headers});
+    }
+
+    getRecipeById(id: number): Observable<Recipe> {
+        const headers = this.getHeaders();
+        return this.http.get<Recipe>(`${this.Url}/getRecipe/${id}`, {headers});
+    }
+
+    createRecipe(recipe: Recipe): Observable<Recipe> {
+        const headers = this.getHeaders();
+        recipe.addedBy = this.authService.getUsernameFromToken();
+        return this.http.post<Recipe>(`${this.Url}/addRecipe`, recipe, {headers})
+            .pipe(
+                tap((result) => {
+                    console.log('Result:', result);
+                }),
+                catchError((error) => {
+                    console.error('Error:', error);
+                    throw error;
+                })
+            );
+    }
+
+    updateRecipeById(id: Number, recipe: Recipe): Observable<Object> {
+        const headers = this.getHeaders();
+        debugger;
+        return this.http.put<Object>(`${this.Url}/updateRecipe/${id}`, recipe, {headers});
+    }
+
+
+    addFavourite(id: number) {
+        debugger;
+        const headers = this.getHeaders();
+        const currentUserUsername = this.authService.getUsernameFromToken();
+        return this.http.post(`${this.Url}/addFavourite/${id}`, currentUserUsername, {headers})
+    }
+
+    getAllFavorites(): Observable<number[]> {
+        const headers = this.getHeaders();
+        const id = this.authService.getUserIdFromToken();
+        const url = `${this.Url}/getFavourites/${id}`;
+
+        return this.http.get<number[]>(url, {headers});
+    }
+
+    removeFavourite(id: number) {
+        const headers = this.getHeaders();
+        const currentUserUsername = this.authService.getUsernameFromToken();
+        return this.http.post(`${this.Url}/removeFavourite/${id}`, currentUserUsername, {headers})
+    }
 }

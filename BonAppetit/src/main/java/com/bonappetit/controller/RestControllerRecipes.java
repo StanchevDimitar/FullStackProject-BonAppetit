@@ -1,16 +1,10 @@
 package com.bonappetit.controller;
 
 import com.bonappetit.model.DTO.ViewDto.RecipeViewDto;
-import com.bonappetit.model.entity.Category;
-import com.bonappetit.model.entity.Recipe;
-import com.bonappetit.model.enums.CategoryEnum;
-import com.bonappetit.repo.CategoryRepository;
-import com.bonappetit.repo.RecipesRepository;
 import com.bonappetit.service.RecipesService;
-import org.springframework.http.HttpStatus;
+import com.bonappetit.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -19,10 +13,11 @@ public class RestControllerRecipes {
 
 
     private final RecipesService recipesService;
+    private final UserService userService;
 
-    public RestControllerRecipes(RecipesService recipesService) {
+    public RestControllerRecipes(RecipesService recipesService, UserService userService) {
         this.recipesService = recipesService;
-
+        this.userService = userService;
     }
 
     @GetMapping("/dessert")
@@ -43,6 +38,24 @@ public class RestControllerRecipes {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/addFavourite/{id}")
+    public ResponseEntity<?> addToFavourite(@PathVariable Long id, @RequestBody String username){
+        userService.addToFavourite(id, username);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/removeFavourite/{id}")
+    public ResponseEntity<?> removeFromFavourite(@PathVariable Long id, @RequestBody String username){
+        userService.removeFromFavourite(id, username);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getFavourites/{id}")
+    public ResponseEntity<?> getFavourites(@PathVariable Long id){
+        List<Long> favourites = userService.getFavourites(id);
+
+        return ResponseEntity.ok(favourites);
     }
 
     @PutMapping("/updateRecipe/{id}")

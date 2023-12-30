@@ -33,7 +33,7 @@ public class UserAuthProvider {
                 .withIssuedAt(now)
                 .withExpiresAt(expire)
                 .withClaim("id",userDto.getId())
-                .withClaim("email",userDto.getEmail())
+                .withClaim("username",userDto.getUsername())
                 .sign(Algorithm.HMAC256(secretKey));
     }
 

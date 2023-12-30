@@ -19,6 +19,7 @@ import {passwordMatchValidator} from "../../../validators/password.validator";
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit{
+  protected errorMessage: string | null = null;
   constructor(private fb: FormBuilder,private authService: AuthService,private router: Router) {
   }
 
@@ -43,13 +44,6 @@ export class RegisterComponent implements OnInit{
     this.registerUser();
   }
 
-  private handleUpdateResponse(): void {
-    this.redirectMethod();
-  }
-  private redirectMethod() {
-    debugger;
-    this.router.navigate(['/']);
-  }
 
   private handleError(error: any): void {
     if (error.error instanceof Array) {
@@ -63,12 +57,21 @@ export class RegisterComponent implements OnInit{
   }
   registerUser() {
     this.authService.register(this.user).subscribe(
-      {
-        next: this.handleUpdateResponse.bind(this),
+        {
+          next: () => {
+            this.router.navigate(["/login"]);
+          } ,
 
-        error: this.handleError.bind(this)
-      })
-
+          error:  (error) => {
+            debugger;
+            if (error.status === 226) { // HttpStatus.IM_USED
+              // Handle username already in use
+              this.errorMessage = error.error.text;
+            } else {
+              console.log(error);
+            }
+          }
+        });
   }
   ngOnInit(): void {
   }

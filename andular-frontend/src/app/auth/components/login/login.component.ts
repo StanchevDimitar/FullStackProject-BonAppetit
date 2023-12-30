@@ -37,6 +37,9 @@ export class LoginComponent {
     this.loginUser();
   }
 
+  redirect(route: string) {
+    return this.router.navigate([route]);
+  }
 
   private loginUser() {
     if (this.loginForm.valid) {
@@ -44,21 +47,14 @@ export class LoginComponent {
       debugger;
       this.authService.login(credentials).subscribe({
         next: (authToken) => {
-          // Access the token here
-          const token = authToken.token;
           this.isValid = true;
-          console.log('Received token:', token);
+          this.router.navigate(["/"]);
 
-          // You might want to redirect the user or update UI accordingly
         },
         error: (error) => {
           // Handle login error here
-          console.error('Login failed', error);
           this.isValid = false;
-        },
-        complete: () => {
-          // This block will be executed when the observable is complete (if needed)
-        },
+        }
       });
 
 

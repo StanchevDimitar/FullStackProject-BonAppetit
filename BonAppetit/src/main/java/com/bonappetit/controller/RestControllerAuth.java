@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -27,21 +28,21 @@ public class RestControllerAuth {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid UserRegisterDto userRegisterDto) {
-        boolean isUsed = userService.checkUsername(userRegisterDto.getUsername());
+        List<String> errors = userService.checkCredentials(userRegisterDto);
 
-        if (isUsed) {
-            return ResponseEntity.status(HttpStatus.IM_USED).body("Username is already in use");
+        if (!errors.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.IM_USED).body(String.join("\n", errors));
         }
 
-        UserJWTDto jwtDto = userService.registerUser(userRegisterDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(jwtDto.toString());
+        userService.registerUser(userRegisterDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody CredentialsDto credentialsDto){
+    public ResponseEntity<?> login(@RequestBody CredentialsDto credentialsDto) {
         UserJWTDto login = userService.login(credentialsDto);
         login.setToken(userAuthProvider.createToken(login));
-            return ResponseEntity.ok(Collections.singletonMap("token", login.getToken()));
+        return ResponseEntity.ok(Collections.singletonMap("token", login.getToken()));
 
     }
 

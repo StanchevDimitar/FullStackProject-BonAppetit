@@ -3,16 +3,7 @@ export class Recipe {
     name!: string;
     ingredients!: string;
     category!: string;
-    addedBy: string;
+    addedBy!: string | null;
 
-    constructor(){
-        this.addedBy = "Ivaan"
-    }
 
-    // constructor(){
-    //     this.name = "";
-    //     this.ingredients = "";
-    //     this.category = "";
-    //     this.creatorName = "";
-    // }
 }

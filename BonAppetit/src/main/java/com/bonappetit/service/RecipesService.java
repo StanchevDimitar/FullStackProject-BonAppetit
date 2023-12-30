@@ -55,11 +55,11 @@ public class RecipesService {
 //            User user = userService.getCurrentUser();
 
             Category category = categoryRepository.findCategoriesByName(CategoryEnum.valueOf(recipeDto.getCategory()));
-
+            User user = userRepository.findByUsername(recipeDto.getAddedBy()).get();
             Recipe recipe = new Recipe();
 
             recipe.setName(recipeDto.getName());
-//            recipe.setAddedBy(user);
+            recipe.setAddedBy(user);
             recipe.setIngredients(recipeDto.getIngredients());
             recipe.setCategory(category);
 
@@ -100,7 +100,7 @@ public class RecipesService {
 
     private RecipeViewDto getRecipeViewDto(Recipe recipe) {
         RecipeViewDto recipeViewDto = modelMapper.map(recipe, RecipeViewDto.class);
-        recipeViewDto.setAddedBy(recipe.getName());
+        recipeViewDto.setAddedBy(recipe.getAddedBy().getUsername());
         recipeViewDto.setCategory(recipe.getCategory().getName().name());
         return recipeViewDto;
     }

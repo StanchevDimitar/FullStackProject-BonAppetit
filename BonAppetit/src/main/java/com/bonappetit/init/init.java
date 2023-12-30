@@ -19,13 +19,6 @@ public class init implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("kashon");
-        List<Category> all = categoryRepository.findAll();
-        Category category1 = all.get(0);
-        CategoryEnum name = category1.getName();
-        String string = name.toString();
-
-
         if (categoryRepository.findAll().isEmpty()) {
             CategoryEnum[] values = CategoryEnum.values();
 

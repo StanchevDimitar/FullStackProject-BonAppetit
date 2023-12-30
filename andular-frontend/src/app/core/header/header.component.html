@@ -5,7 +5,7 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="recipes" routerLinkActve="active">Recipes List</a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="authService.isAuthenticated()" class="nav-item">
             <a class="nav-link" routerLink="create-recipe" routerLinkActve="active">Create Recipe</a>
           </li>
           <li *ngIf="!authService.isAuthenticated()" class="nav-item">

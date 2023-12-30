@@ -13,10 +13,9 @@ import com.bonappetit.util.CurrentUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.security.InvalidParameterException;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -35,10 +34,17 @@ public class UserService {
         this.userAuthProvider = userAuthProvider;
     }
 
-    public boolean checkUsername(String username) {
-        Optional<User> byUsername = userRepository.findByUsername(username);
-
-        return byUsername.isPresent();
+    public List<String> checkCredentials(UserRegisterDto user) {
+        List<String> errors = new ArrayList<>();
+        Optional<User> byUsername = userRepository.findByUsername(user.getUsername());
+        if (byUsername.isPresent()){
+            errors.add("Username is taken");
+        }
+        Optional<User> byEmail = userRepository.findByEmail(user.getEmail());
+        if (byEmail.isPresent()){
+            errors.add("Email is taken");
+        }
+        return errors;
     }
 
     public UserJWTDto registerUser(UserRegisterDto userRegisterDto) {
@@ -114,6 +120,12 @@ public class UserService {
         currentUser1.setFavouriteRecipes(recipeByName);
         userRepository.save(currentUser1);
     }
+    public void addToFavourite(Long id, String username) {
+        Recipe recipeByName = recipesRepository.findById(id).get();
+        User user = userRepository.findByUsername(username).get();
+        user.setFavouriteRecipes(recipeByName);
+        userRepository.save(user);
+    }
 
     public void removeFromFav(String name) {
         Recipe recipeByName = recipesRepository.findRecipeByName(name);
@@ -121,6 +133,31 @@ public class UserService {
         Set<Recipe> favouriteRecipes = currentUser1.getFavouriteRecipes();
         favouriteRecipes.removeIf(r -> r.getName().equals(recipeByName.getName()));
         userRepository.save(currentUser1);
+    }
+
+    public boolean checkCredentials(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    public List<Long> getFavourites(Long currUserID) {
+        Optional<User> byId = userRepository.findById(currUserID);
+        if (byId.isEmpty()){
+            return null;
+        }
+        List<Long> listOfRecipes = new ArrayList<>();
+        User user = byId.get();
+
+        user.getFavouriteRecipes().forEach(r -> listOfRecipes.add(r.getId()));
+
+        return listOfRecipes;
+    }
+    @Transactional
+    public void removeFromFavourite(Long id, String username) {
+        Recipe recipe = recipesRepository.findById(id).get();
+        User user = userRepository.findByUsername(username).get();
+        Set<Recipe> favouriteRecipes = user.getFavouriteRecipes();
+        favouriteRecipes.remove(recipe);
+        userRepository.save(user);
     }
 
 //    public User getCurrentlyLoggedInUser(){

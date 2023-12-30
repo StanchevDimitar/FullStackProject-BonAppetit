@@ -18,21 +18,45 @@ export class AuthService {
   register(user: User): Observable<any> {
 
   debugger;
-    return this.http.post<User>(`${this.apiUrl}/register`, user);
+    return this.http.post<any>(`${this.apiUrl}/register`, user);
   }
-testMethod(authToken: AuthToken){
-    debugger;
-  localStorage.setItem('token', authToken.token);
-}
+
   login(credentials: User) {
     debugger;
       return this.http.post<AuthToken>(`${this.apiUrl}/login`, credentials).pipe(
         tap((authToken: AuthToken) => {
           debugger;
-          this.testMethod(authToken)
+          localStorage.setItem('token', authToken.token);
         })
       );
 
+  }
+
+  getUsernameFromToken(): string | null {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      const tokenPayload = this.parseJwt(token);
+      return tokenPayload.username || null;
+    }
+
+    return null;
+  }
+  getUserIdFromToken(): string | null {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      const tokenPayload = this.parseJwt(token);
+      return tokenPayload?.id || null;
+    }
+
+    return null;
+  }
+
+  private parseJwt(token: string): any {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
   }
 
   isAuthenticated(): boolean {

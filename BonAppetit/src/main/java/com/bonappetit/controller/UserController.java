@@ -85,7 +85,7 @@ public class UserController {
             return "redirect:register";
         }
 
-        boolean isUsed = userService.checkUsername(userRegisterDto.getUsername());
+        boolean isUsed = userService.checkCredentials(userRegisterDto.getUsername());
 
         if (isUsed) {
             redirectAttributes.addFlashAttribute("userRegisterDto",userRegisterDto);
