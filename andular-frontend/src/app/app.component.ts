@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import {Router, RouterModule, RouterOutlet} from '@angular/router';
 import { RecipeListComponent } from './recipe-list/recipe-list.component';
 import { RecipeService } from './recipe.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,6 +18,10 @@ import {AuthService} from "./auth/services/auth.service";
   styleUrl: './app.component.css',
   providers: [RecipeService,AuthService],
 })
-export class AppComponent {
+export class AppComponent{
+
+
   title = 'angular-frontend';
+
+
 }

@@ -28,6 +28,7 @@ export class RecipeService {
     }
 
     getAllRecipes(): Observable<Recipe[]> {
+        debugger
         return this.http.get<Recipe[]>(`${this.Url}/allRecipes`,);
     }
 
