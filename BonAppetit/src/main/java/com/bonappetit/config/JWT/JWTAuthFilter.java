@@ -1,6 +1,7 @@
 package com.bonappetit.config.JWT;
 
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,19 +24,23 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (header != null){
+        if (header != null) {
             String[] authElements = header.split(" ");
 
-            if (authElements.length == 2 && "Bearer".equals(authElements[0])){
+            if (authElements.length == 2 && "Bearer".equals(authElements[0])) {
                 try {
                     SecurityContextHolder.getContext().setAuthentication(userAuthProvider.validateToken(authElements[1]));
-                }catch (RuntimeException e){
+                } catch (JWTDecodeException e) {
+                    // Token decoding failed, return 403  or 401
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write("Invalid JWT Token");
+                    return;
+                } catch (RuntimeException e) {
                     SecurityContextHolder.clearContext();
                     throw e;
                 }
             }
         }
-        filterChain.doFilter(request,response);
-
+        filterChain.doFilter(request, response);
     }
 }

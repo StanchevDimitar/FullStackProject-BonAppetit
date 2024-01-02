@@ -47,8 +47,6 @@ export class AuthService {
             // Check other conditions or return true/false based on your logic
             return token !== null && token !== undefined;
         } else {
-            // localStorage is not available (e.g., during server-side rendering)
-            // Handle the case accordingly, you might want to return false or throw an error
             return false;
         }
     }
@@ -82,12 +80,12 @@ export class AuthService {
     }
 
     isTokenExpired(): boolean {
-        debugger
         const token = localStorage.getItem('token');
 
         if (token) {
             const tokenPayload = this.parseJwt(token);
-            const expirationDate = new Date(tokenPayload.exp * 1000); // Convert to milliseconds
+            // Convert to milliseconds
+            const expirationDate = new Date(tokenPayload.exp * 1000);
 
             return expirationDate < new Date();
         }

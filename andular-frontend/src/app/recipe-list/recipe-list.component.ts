@@ -86,9 +86,12 @@ export class RecipeListComponent implements OnInit {
     this.recipeService.getDesserts().subscribe(data => {
       this.desserts = data;
     });
-    this.recipeService.getAllFavorites().subscribe(data => {
-      this.favorites = data;
-    })
+    if (this.authService.isAuthenticated()){
+      this.recipeService.getAllFavorites().subscribe(data => {
+        this.favorites = data;
+      })
+    }
+
 
   }
 
