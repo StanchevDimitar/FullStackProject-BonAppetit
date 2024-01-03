@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {catchError, Observable, of, tap} from 'rxjs';
+import {catchError, Observable, tap} from 'rxjs';
 import {Recipe} from './recipe';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AuthService} from "./auth/services/auth.service";

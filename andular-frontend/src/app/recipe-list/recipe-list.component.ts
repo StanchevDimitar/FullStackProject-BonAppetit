@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Recipe } from '../recipe';
 import { RecipeService } from '../recipe.service';
-import { routes } from '../app.routes';
 import { Router } from '@angular/router';
 import {AuthService} from "../auth/services/auth.service";
 import {lastValueFrom} from "rxjs";
