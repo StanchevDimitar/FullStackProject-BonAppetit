@@ -13,7 +13,6 @@ export class httpTokenInterceptor implements HttpInterceptor {
       request: HttpRequest<any>,
       next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    debugger;
     try {
       if (typeof localStorage !== 'undefined' && localStorage.getItem('token')) {
         if (this.authService.isTokenExpired()) {

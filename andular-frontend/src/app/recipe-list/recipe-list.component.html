@@ -23,7 +23,7 @@
         <td> {{ recipe.category }}</td>
         <td> {{ recipe.addedBy }}</td>
         <td>
-            <div *ngIf="authService.isAuthenticated()">
+            <div *ngIf="this.isLogged && ownRecipe(recipe.id)">
                 <button (click)="editRecipe(recipe.id)">Edit</button>
                 <button (click)="deleteRecipe(recipe.id)">Delete</button>
             </div>

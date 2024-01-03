@@ -17,7 +17,7 @@ public class Recipe extends BaseEntity {
     private Category category;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "favouriteRecipes")
+    @JoinColumn(name = "user_id")
     private User addedBy;
 
     public Recipe() {

@@ -22,12 +22,20 @@ export class RecipeListComponent implements OnInit {
   allRecipes: Recipe[];
   desserts: Recipe[];
   favorites: number[]
+  isLogged: boolean;
+  ownsRecipes: number[];
   constructor(private recipeService: RecipeService, private router: Router,protected authService: AuthService) {
     this.allRecipes = new Array;
     this.desserts = new Array;
     this.favorites = new Array;
+    this.ownsRecipes = new Array;
+    this.isLogged =this.authService.isAuthenticated()
   }
 
+  ownRecipe(recipeId: number):boolean{
+    debugger;
+    return this.ownsRecipes.includes(recipeId)
+  }
   async addToFavourites(id: number) {
     try {
       debugger;
@@ -79,16 +87,21 @@ export class RecipeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.recipeService.getAllRecipes().subscribe(data => {
-      debugger;
       this.allRecipes = data;
     });
 
     this.recipeService.getDesserts().subscribe(data => {
       this.desserts = data;
     });
-    if (this.authService.isAuthenticated()){
-      this.recipeService.getAllFavorites().subscribe(data => {
+    if (this.isLogged){
+      this.recipeService.getAllFavoritesIds().subscribe(data => {
         this.favorites = data;
+      })
+    }
+    if (this.isLogged){
+      this.recipeService.getOwnRecipes().subscribe(data => {
+        debugger;
+        this.ownsRecipes = data;
       })
     }
 

@@ -5,11 +5,15 @@ import com.bonappetit.model.DTO.CredentialsDto;
 import com.bonappetit.model.DTO.UserJWTDto;
 import com.bonappetit.model.DTO.UserLoginDto;
 import com.bonappetit.model.DTO.UserRegisterDto;
+import com.bonappetit.model.DTO.ViewDto.RecipeViewDto;
 import com.bonappetit.model.entity.Recipe;
 import com.bonappetit.model.entity.User;
 import com.bonappetit.repo.RecipesRepository;
 import com.bonappetit.repo.UserRepository;
 import com.bonappetit.util.CurrentUser;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +30,35 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserAuthProvider userAuthProvider;
 
+
     public UserService(UserRepository userRepository, CurrentUser currentUser, RecipesRepository recipesRepository, PasswordEncoder passwordEncoder, UserAuthProvider userAuthProvider) {
         this.userRepository = userRepository;
         this.currentUser = currentUser;
         this.recipesRepository = recipesRepository;
         this.passwordEncoder = passwordEncoder;
         this.userAuthProvider = userAuthProvider;
+
+    }
+
+    public String getCurrentlyLoggedUserUsername() {
+        // Get the authentication object
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof UserJWTDto) {
+                // If the principal is an instance of UserJWTDto, extract the username
+                UserJWTDto userDTO = (UserJWTDto) principal;
+                return userDTO.getUsername();
+            } else {
+                // Handle the case when the principal is not an instance of UserJWTDto
+                return null; // or throw an exception, or return a default value
+            }
+        } else {
+            // Handle the case when there is no authenticated user
+            return null; // or throw an exception, or return a default value
+        }
     }
 
     public List<String> checkCredentials(UserRegisterDto user) {
@@ -139,18 +166,7 @@ public class UserService {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    public List<Long> getFavourites(Long currUserID) {
-        Optional<User> byId = userRepository.findById(currUserID);
-        if (byId.isEmpty()){
-            return null;
-        }
-        List<Long> listOfRecipes = new ArrayList<>();
-        User user = byId.get();
 
-        user.getFavouriteRecipes().forEach(r -> listOfRecipes.add(r.getId()));
-
-        return listOfRecipes;
-    }
     @Transactional
     public void removeFromFavourite(Long id, String username) {
         Recipe recipe = recipesRepository.findById(id).get();

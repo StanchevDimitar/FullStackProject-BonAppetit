@@ -76,17 +76,31 @@ export class RecipeService {
         return this.http.post(`${this.Url}/addFavourite/${id}`, currentUserUsername, {headers})
     }
 
-    getAllFavorites(): Observable<number[]> {
+    getAllFavoritesIds(): Observable<number[]> {
         const headers = this.getHeaders();
-        const id = this.authService.getUserIdFromToken();
-        const url = `${this.Url}/getFavourites/${id}`;
+        const userID = this.authService.getUserIdFromToken();
+        const url = `${this.Url}/getFavouritesIds/${userID}`;
 
         return this.http.get<number[]>(url, {headers});
+    }
+    getAllFavorites(): Observable<Recipe[]> {
+        const headers = this.getHeaders();
+        const userID = this.authService.getUserIdFromToken();
+        const url = `${this.Url}/getFavourites/${userID}`;
+
+        return this.http.get<Recipe[]>(url, {headers});
     }
 
     removeFavourite(id: number) {
         const headers = this.getHeaders();
         const currentUserUsername = this.authService.getUsernameFromToken();
         return this.http.post(`${this.Url}/removeFavourite/${id}`, currentUserUsername, {headers})
+    }
+
+    getOwnRecipes() {
+        debugger;
+        const headers = this.getHeaders();
+        const userID = this.authService.getUserIdFromToken();
+        return this.http.get<number[]>(`${this.Url}/getOwnRecipes/${userID}`,{headers})
     }
 }

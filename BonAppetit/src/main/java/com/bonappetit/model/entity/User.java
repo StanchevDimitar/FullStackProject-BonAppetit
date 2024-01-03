@@ -2,8 +2,6 @@ package com.bonappetit.model.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import java.util.HashSet;
 import java.util.Set;
 
 @Table(name = "users")
@@ -19,8 +17,8 @@ public class User extends BaseEntity{
     @Email
     private String email;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private Set<Recipe> recipes;
+    @OneToMany(mappedBy = "addedBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Recipe> ownRecipes;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Recipe> favouriteRecipes;
@@ -56,12 +54,12 @@ public class User extends BaseEntity{
         return this;
     }
 
-    public Set<Recipe> getRecipes() {
-        return recipes;
+    public Set<Recipe> getOwnRecipes() {
+        return ownRecipes;
     }
 
-    public User setRecipes(Set<Recipe> recipes) {
-        this.recipes = recipes;
+    public User setOwnRecipes(Set<Recipe> recipes) {
+        this.ownRecipes = recipes;
         return this;
     }
 

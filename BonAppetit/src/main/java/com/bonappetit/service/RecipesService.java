@@ -80,6 +80,29 @@ public class RecipesService {
         return currentUser.getFavouriteRecipes();
     }
 
+    public List<Long> getFavouritesIds(Long currUserID) {
+        Optional<User> byId = userRepository.findById(currUserID);
+        if (byId.isEmpty()){
+            return null;
+        }
+        List<Long> listOfRecipes = new ArrayList<>();
+        User user = byId.get();
+
+        user.getFavouriteRecipes().forEach(r -> listOfRecipes.add(r.getId()));
+
+        return listOfRecipes;
+    }
+    public List<RecipeViewDto> getFavourites(Long currUserID) {
+        Optional<User> byId = userRepository.findById(currUserID);
+        if (byId.isEmpty()){
+            return null;
+        }
+        User user = byId.get();
+
+        List<Recipe> favouriteRecipes = user.getFavouriteRecipes().stream().toList();
+        return getListOfRecipeViewDtos(favouriteRecipes);
+    }
+
     public List<RecipeViewDto> getAll() {
         List<Recipe> all = recipesRepository.findAll();
         return getListOfRecipeViewDtos(all);
@@ -91,7 +114,7 @@ public class RecipesService {
         return getListOfRecipeViewDtos(dessertRecipes);
     }
 
-    private List<RecipeViewDto> getListOfRecipeViewDtos(List<Recipe> recipeByCategory) {
+    protected List<RecipeViewDto> getListOfRecipeViewDtos(List<Recipe> recipeByCategory) {
 
         return recipeByCategory.stream()
                 .map(this::getRecipeViewDto)
@@ -104,12 +127,19 @@ public class RecipesService {
         recipeViewDto.setCategory(recipe.getCategory().getName().name());
         return recipeViewDto;
     }
+    private boolean recipeOwnerMatchesCurrentlyLoggedUser(Recipe recipe){
+        return recipe.getAddedBy().getUsername().equals(userService.getCurrentlyLoggedUserUsername());
+    }
 
     public boolean deleteRecipeById(Long id) {
 
-        if (recipesRepository.findById(id).isPresent()) {
-            recipesRepository.deleteById(id);
-            return true;
+        Optional<Recipe> byId = recipesRepository.findById(id);
+        if (byId.isPresent()) {
+            Recipe recipe = byId.get();
+            if (recipeOwnerMatchesCurrentlyLoggedUser(recipe)){
+                recipesRepository.deleteById(id);
+                return true;
+            }
         }
         return false;
 
@@ -121,10 +151,14 @@ public class RecipesService {
         if (optionalRecipe.isEmpty()) {
             return false;
         }
+        Recipe recipe = optionalRecipe.get();
+        if (recipeOwnerMatchesCurrentlyLoggedUser(recipe)){
+            return false;
+        }
 
         try {
 
-            Recipe recipe = optionalRecipe.get();
+
             String categoryRequest = request.getCategory();
             String categoryEntity = recipe.getCategory().getName().name();
             if (!recipe.getName().equals(request.getName())) {
@@ -151,5 +185,16 @@ public class RecipesService {
         Optional<Recipe> byId = recipesRepository.findById(id);
         return byId.map(this::getRecipeViewDto).orElse(null);
 
+    }
+
+    public List<Long> getRecipesIdsByOwner(Long id) {
+        Optional<User> byId = userRepository.findById(id);
+        if (byId.isEmpty()){
+            return new ArrayList<>();
+        }
+        User user = byId.get();
+        List<Long> listOfRecipes = new ArrayList<>();
+        user.getOwnRecipes().forEach(recipe -> listOfRecipes.add(recipe.getId()));
+        return listOfRecipes;
     }
 }

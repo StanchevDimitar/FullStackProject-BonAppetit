@@ -44,17 +44,6 @@ export class RegisterComponent implements OnInit{
     this.registerUser();
   }
 
-
-  private handleError(error: any): void {
-    if (error.error instanceof Array) {
-      // Assuming the backend sends an array of error messages
-      this.errors = error.error;
-    } else {
-      // Clear previous errors if needed
-      this.errors = ['An unexpected error occurred. Please try again.'];
-    }
-    console.log(this.errors)
-  }
   registerUser() {
     this.authService.register(this.user).subscribe(
         {
