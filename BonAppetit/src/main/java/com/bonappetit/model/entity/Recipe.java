@@ -13,7 +13,7 @@ public class Recipe extends BaseEntity {
     private String ingredients;
 
     @ManyToOne
-    @JoinColumn(name = "recipes")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -6,13 +6,12 @@
     background-color: #e9ecef;
 }
 
-.bg-nav{
+.bg-nav {
     background-color: rgba(1, 141, 8, 0);
 }
 
 
 body {
-    background-image: url(/img/background.jpg);
     background-position: center;
     background-attachment: fixed;
     background-size: cover;
@@ -54,25 +53,25 @@ footer {
     left: 0;
 }
 
-.container{
+.container {
 
 }
 
-.text-stroke{
-    text-shadow:
-            0.07em 0 white,
-            0 0.07em white,
-            -0.07em 0 white,
-            0 -0.07em white;
+.text-stroke {
+    text-shadow: 0.07em 0 white,
+    0 0.07em white,
+    -0.07em 0 white,
+    0 -0.07em white;
 }
 
-.text-primary{
-    color: #1a00e4!important;
+.text-primary {
+    color: #1a00e4 !important;
 }
 
 .table td, .table th {
     padding: 0.15rem;
 }
+
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)

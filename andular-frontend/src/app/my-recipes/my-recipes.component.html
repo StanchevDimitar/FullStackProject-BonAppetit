@@ -6,23 +6,25 @@
         <th>Ingredients:</th>
         <th>Category:</th>
         <th>Created By:</th>
+        <th>Action:</th>
 
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let recipe of favRecipes">
+    <tr *ngFor="let recipe of recipes">
         <td>
-            <div *ngIf="authService.isAuthenticated()">
-                <button class="btn btn-warning" *ngIf="isFavorite(recipe.id)" (click)="removeFromFavourites(recipe.id)">
-                    &#215;
-                </button>
-            </div>
             {{ recipe.name }}
         </td>
         <td> {{ recipe.ingredients }}</td>
         <td> {{ recipe.category }}</td>
         <td> {{ recipe.addedBy }}</td>
+        <td>
+            <div *ngIf="this.authService.isAuthenticated()" class="button-box">
+                <button class="btn btn-primary" (click)="editRecipe(recipe.id)">Edit</button>
+                <button class="btn btn-danger" (click)="deleteRecipe(recipe.id)">Delete</button>
+            </div>
 
+        </td>
     </tr>
     </tbody>
 </table>

@@ -12,6 +12,7 @@ import com.bonappetit.repo.UserRepository;
 import com.bonappetit.util.CurrentUser;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -113,6 +114,17 @@ public class RecipesService {
         List<Recipe> dessertRecipes = recipesRepository.findRecipeByCategory(dessertCategory);
         return getListOfRecipeViewDtos(dessertRecipes);
     }
+    public List<RecipeViewDto> getMainDishes() {
+        Category mainDishCategory = categoryRepository.findCategoriesByName(CategoryEnum.MAIN_DISH);
+        List<Recipe> mainDishRecipes = recipesRepository.findRecipeByCategory(mainDishCategory);
+        return getListOfRecipeViewDtos(mainDishRecipes);
+    }
+
+    public List<RecipeViewDto> getCocktails() {
+        Category cocktailCategory = categoryRepository.findCategoriesByName(CategoryEnum.COCKTAIL);
+        List<Recipe> cocktailRecipes = recipesRepository.findRecipeByCategory(cocktailCategory);
+        return getListOfRecipeViewDtos(cocktailRecipes);
+    }
 
     protected List<RecipeViewDto> getListOfRecipeViewDtos(List<Recipe> recipeByCategory) {
 
@@ -131,6 +143,7 @@ public class RecipesService {
         return recipe.getAddedBy().getUsername().equals(userService.getCurrentlyLoggedUserUsername());
     }
 
+    @Transactional
     public boolean deleteRecipeById(Long id) {
 
         Optional<Recipe> byId = recipesRepository.findById(id);
@@ -152,7 +165,7 @@ public class RecipesService {
             return false;
         }
         Recipe recipe = optionalRecipe.get();
-        if (recipeOwnerMatchesCurrentlyLoggedUser(recipe)){
+        if (!recipeOwnerMatchesCurrentlyLoggedUser(recipe)){
             return false;
         }
 
@@ -189,12 +202,22 @@ public class RecipesService {
 
     public List<Long> getRecipesIdsByOwner(Long id) {
         Optional<User> byId = userRepository.findById(id);
-        if (byId.isEmpty()){
+        if (byId.isEmpty()) {
             return new ArrayList<>();
         }
         User user = byId.get();
         List<Long> listOfRecipes = new ArrayList<>();
         user.getOwnRecipes().forEach(recipe -> listOfRecipes.add(recipe.getId()));
+        return listOfRecipes;
+    }
+    public List<RecipeViewDto> getRecipesByOwner(Long id) {
+        Optional<User> byId = userRepository.findById(id);
+        if (byId.isEmpty()) {
+            return new ArrayList<>();
+        }
+        User user = byId.get();
+        List<RecipeViewDto> listOfRecipes = new ArrayList<>();
+        user.getOwnRecipes().forEach(recipe -> listOfRecipes.add(getRecipeViewDto(recipe)));
         return listOfRecipes;
     }
 }

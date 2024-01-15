@@ -2,66 +2,67 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {User} from "../model/user";
 import {AuthService} from "../../services/auth.service";
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {CommonModule} from "@angular/common";
 import {passwordMatchValidator} from "../../../validators/password.validator";
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule
-  ],
-  providers: [],
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+    selector: 'app-register',
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule
+    ],
+    providers: [],
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements OnInit{
-  protected errorMessage: string | null = null;
-  constructor(private fb: FormBuilder,private authService: AuthService,private router: Router) {
-  }
+export class RegisterComponent implements OnInit {
+    protected errorMessage: string | null = null;
 
-  errors: string[] =[];
+    constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    }
 
-  registerForm: FormGroup = this.fb.group({
-    username: ["", [Validators.required,Validators.minLength(3),Validators.maxLength(20)]],
-    email: ["", [Validators.required,Validators.email]],
-    password: ["",[Validators.required, Validators.minLength(3),Validators.maxLength(20)]],
-    confirmPassword: ["",[Validators.required, Validators.minLength(3),Validators.maxLength(20)]],
-  },
-    {
-      validators: passwordMatchValidator,
-    })
-  user: User = new User();
+    errors: string[] = [];
 
-  onSubmit(){
-    this.user.username = this.registerForm.value.username;
-    this.user.email = this.registerForm.value.email;
-    this.user.password = this.registerForm.value.password;
-    this.user.confirmPassword = this.registerForm.value.confirmPassword;
-    this.registerUser();
-  }
-
-  registerUser() {
-    this.authService.register(this.user).subscribe(
+    registerForm: FormGroup = this.fb.group({
+            username: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+            email: ["", [Validators.required, Validators.email]],
+            password: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+            confirmPassword: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+        },
         {
-          next: () => {
-            this.router.navigate(["/login"]);
-          } ,
+            validators: passwordMatchValidator,
+        })
+    user: User = new User();
 
-          error:  (error) => {
-            debugger;
-            if (error.status === 226) { // HttpStatus.IM_USED
-              // Handle username already in use
-              this.errorMessage = error.error.text;
-            } else {
-              console.log(error);
-            }
-          }
-        });
-  }
-  ngOnInit(): void {
-  }
+    onSubmit() {
+        this.user.username = this.registerForm.value.username;
+        this.user.email = this.registerForm.value.email;
+        this.user.password = this.registerForm.value.password;
+        this.user.confirmPassword = this.registerForm.value.confirmPassword;
+        this.registerUser();
+    }
+
+    registerUser() {
+        this.authService.register(this.user).subscribe(
+            {
+                next: () => {
+                    this.router.navigate(["/login"]);
+                },
+
+                error: (error) => {
+                    if (error.status === 226) { // HttpStatus.IM_USED
+                        // Handle username already in use
+                        this.errorMessage = error.error.text;
+                    } else {
+                        console.log(error);
+                    }
+                }
+            });
+    }
+
+    ngOnInit(): void {
+    }
 }

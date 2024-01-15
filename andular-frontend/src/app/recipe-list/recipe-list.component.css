@@ -1,0 +1,14 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3em;
+}
+
+#all {
+    grid-row: 1 / 4;
+}
+
+.button-box {
+    display: flex;
+    gap: 5px;
+}

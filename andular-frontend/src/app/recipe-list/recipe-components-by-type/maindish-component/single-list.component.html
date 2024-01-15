@@ -1,0 +1,38 @@
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Name:</th>
+        <th>Ingredients:</th>
+        <th>Category:</th>
+        <th>Created By:</th>
+        <th *ngIf="this.isLogged">Actions:</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let recipe of recipes">
+        <td>
+            <div *ngIf="this.isLogged">
+                <button class="btn btn-success" *ngIf="!onIsFavorite(recipe.id)" (click)="onAddToFavorites(recipe.id)">
+                    &#9733;
+                </button>
+                <button class="btn btn-warning" *ngIf="onIsFavorite(recipe.id)" (click)="onRemoveFromFavorites(recipe.id)">
+                    &#215;
+                </button>
+            </div>
+            {{ recipe.name }}
+        </td>
+        <td> {{ recipe.ingredients }}</td>
+        <td> {{ recipe.category }}</td>
+        <td> {{ recipe.addedBy }}</td>
+        <td>
+            <div *ngIf="this.isLogged && ownRecipe(recipe.id)" class="button-box">
+                <button class="btn btn-primary" (click)="editRecipe(recipe.id)">Edit</button>
+                <button class="btn btn-danger" (click)="deleteRecipe(recipe.id)">Delete</button>
+            </div>
+
+        </td>
+    </tr>
+    </tbody>
+</table>

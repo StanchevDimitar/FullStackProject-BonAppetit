@@ -21,9 +21,17 @@ public class RestControllerRecipes {
         this.userService = userService;
     }
 
+    @GetMapping("/mainDish")
+    public ResponseEntity<List<RecipeViewDto>> getMainDish() {
+        return ResponseEntity.ok(recipesService.getMainDishes());
+    }
     @GetMapping("/dessert")
     public ResponseEntity<List<RecipeViewDto>> getDesserts() {
         return ResponseEntity.ok(recipesService.getAllDesserts());
+    }
+    @GetMapping("/cocktails")
+    public ResponseEntity<List<RecipeViewDto>> getCocktails() {
+        return ResponseEntity.ok(recipesService.getCocktails());
     }
 
     @GetMapping("/allRecipes")
@@ -59,9 +67,16 @@ public class RestControllerRecipes {
 
         return ResponseEntity.ok(favourites);
     }
-    @GetMapping("/getOwnRecipes/{id}")
-    public ResponseEntity<List<Long>> getOwnRecipes(@PathVariable Long id){
+    @GetMapping("/getOwnRecipesIds/{id}")
+    public ResponseEntity<List<Long>> getOwnRecipesIds(@PathVariable Long id){
         List<Long> recipesIdsByOwner = recipesService.getRecipesIdsByOwner(id);
+
+        return ResponseEntity.ok(recipesIdsByOwner);
+    }
+
+    @GetMapping("/getOwnRecipes/{id}")
+    public ResponseEntity<List<RecipeViewDto>> getOwnRecipes(@PathVariable Long id){
+        List<RecipeViewDto> recipesIdsByOwner = recipesService.getRecipesByOwner(id);
 
         return ResponseEntity.ok(recipesIdsByOwner);
     }

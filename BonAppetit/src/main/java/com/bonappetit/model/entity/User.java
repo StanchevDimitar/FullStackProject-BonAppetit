@@ -17,7 +17,7 @@ public class User extends BaseEntity{
     @Email
     private String email;
 
-    @OneToMany(mappedBy = "addedBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "addedBy", fetch = FetchType.EAGER)
     private Set<Recipe> ownRecipes;
 
     @ManyToMany(fetch = FetchType.EAGER)

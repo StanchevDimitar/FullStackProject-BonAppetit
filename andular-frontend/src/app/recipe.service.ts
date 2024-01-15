@@ -28,13 +28,21 @@ export class RecipeService {
     }
 
     getAllRecipes(): Observable<Recipe[]> {
-        debugger
+
         return this.http.get<Recipe[]>(`${this.Url}/allRecipes`,);
     }
 
     getDesserts(): Observable<Recipe[]> {
 
         return this.http.get<Recipe[]>(`${this.Url}/dessert`);
+    }
+
+    getMainDish() {
+        return this.http.get<Recipe[]>(`${this.Url}/mainDish`);
+    }
+
+    getCocktails() {
+        return this.http.get<Recipe[]>(`${this.Url}/cocktails`);
     }
 
     deleteById(id: number): Observable<void> {
@@ -64,13 +72,11 @@ export class RecipeService {
 
     updateRecipeById(id: Number, recipe: Recipe): Observable<Object> {
         const headers = this.getHeaders();
-        debugger;
         return this.http.put<Object>(`${this.Url}/updateRecipe/${id}`, recipe, {headers});
     }
 
 
     addFavourite(id: number) {
-        debugger;
         const headers = this.getHeaders();
         const currentUserUsername = this.authService.getUsernameFromToken();
         return this.http.post(`${this.Url}/addFavourite/${id}`, currentUserUsername, {headers})
@@ -83,6 +89,7 @@ export class RecipeService {
 
         return this.http.get<number[]>(url, {headers});
     }
+
     getAllFavorites(): Observable<Recipe[]> {
         const headers = this.getHeaders();
         const userID = this.authService.getUserIdFromToken();
@@ -97,10 +104,15 @@ export class RecipeService {
         return this.http.post(`${this.Url}/removeFavourite/${id}`, currentUserUsername, {headers})
     }
 
-    getOwnRecipes() {
-        debugger;
+    getOwnRecipesId() {
         const headers = this.getHeaders();
         const userID = this.authService.getUserIdFromToken();
-        return this.http.get<number[]>(`${this.Url}/getOwnRecipes/${userID}`,{headers})
+        return this.http.get<number[]>(`${this.Url}/getOwnRecipesIds/${userID}`, {headers})
+    }
+
+    getOwnRecipes() {
+        const headers = this.getHeaders();
+        const userID = this.authService.getUserIdFromToken();
+        return this.http.get<Recipe[]>(`${this.Url}/getOwnRecipes/${userID}`, {headers})
     }
 }

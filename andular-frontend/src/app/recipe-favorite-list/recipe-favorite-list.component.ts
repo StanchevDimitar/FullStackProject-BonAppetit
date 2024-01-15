@@ -27,12 +27,11 @@ export class RecipeFavoriteListComponent implements OnInit {
 
     async removeFromFavourites(id: number) {
         try {
-            debugger;
             if (this.isFavorite(id)) {
                 await lastValueFrom(this.recipeService.removeFavourite(id));
                 const index = this.favorites.indexOf(id);
                 this.favorites.splice(index, 1);
-                this.favRecipes =  this.favRecipes.filter(recipe => recipe.id !== id);
+                this.favRecipes = this.favRecipes.filter(recipe => recipe.id !== id);
             }
         } catch (error) {
 
@@ -41,7 +40,7 @@ export class RecipeFavoriteListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.recipeService.getAllFavorites().subscribe(data =>{
+        this.recipeService.getAllFavorites().subscribe(data => {
             this.favRecipes = data;
         })
         this.recipeService.getAllFavoritesIds().subscribe(data => {

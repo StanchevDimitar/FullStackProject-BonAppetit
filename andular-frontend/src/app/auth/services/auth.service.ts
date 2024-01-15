@@ -20,15 +20,12 @@ export class AuthService {
 
     register(user: User): Observable<any> {
 
-        debugger;
         return this.http.post<any>(`${this.apiUrl}/register`, user);
     }
 
     login(credentials: User) {
-        debugger;
         return this.http.post<AuthToken>(`${this.apiUrl}/login`, credentials).pipe(
             tap((authToken: AuthToken) => {
-                debugger;
                 localStorage.setItem('token', authToken.token);
             })
         );
